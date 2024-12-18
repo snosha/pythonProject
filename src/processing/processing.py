@@ -1,17 +1,17 @@
-# Создаем функцию фильтрации по состоянию
-def filter_by_state(data, state='EXECUTED'):
+from typing import List, Dict, Any
+
+def filter_by_state(data: List[Dict[str, Any]], state: str = 'EXECUTED') -> List[Dict[str, Any]]:
     """
     Фильтрует список словарей по состоянию.
 
     Аргументы:
-        data (list): Список словарей с ключом 'state'.
+        data (List[Dict[str, Any]]): Список словарей с ключом 'state'.
         state (str): Состояние для фильтрации (по умолчанию 'EXECUTED').
 
     Возвращает:
-        list: Отфильтрованный список словарей.
+        List[Dict[str, Any]]: Отфильтрованный список словарей.
     """
     return [item for item in data if item['state'] == state]
-
 
 
 # Создаем список словарей

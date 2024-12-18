@@ -1,14 +1,15 @@
-# Функция для сортировки по дате
-def sort_by_date(data, descending=True):
+from typing import List, Dict, Any
+
+def sort_by_date(data: List[Dict[str, Any]], descending: bool = True) -> List[Dict[str, Any]]:
     """
     Сортирует список словарей по дате.
 
     Аргументы:
-        data (list): Список словарей с ключом 'date'.
+        data (List[Dict[str, Any]]): Список словарей с ключом 'date'.
         descending (bool): Порядок сортировки (по убыванию по умолчанию).
 
     Возвращает:
-        list: Отсортированный список.
+        List[Dict[str, Any]]: Отсортированный список.
     """
     return sorted(data, key=lambda x: x['date'], reverse=descending)
 
