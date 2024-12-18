@@ -1,5 +1,15 @@
 # Функция для сортировки по дате
 def sort_by_date(data, descending=True):
+    """
+    Сортирует список словарей по дате.
+
+    Аргументы:
+        data (list): Список словарей с ключом 'date'.
+        descending (bool): Порядок сортировки (по убыванию по умолчанию).
+
+    Возвращает:
+        list: Отсортированный список.
+    """
     return sorted(data, key=lambda x: x['date'], reverse=descending)
 
 
@@ -16,4 +26,3 @@ print(sort_by_date(data))
 
 # Сортировка по возрастанию
 print(sort_by_date(data, descending=False))
-

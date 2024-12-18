@@ -1,4 +1,4 @@
-# вызываем функцию
+# гвызываем функцию
 from src.widget import get_mask_account, get_mask_card_number
 
 a = "Visa Platinum 7000792289606361"
