@@ -1,20 +1,22 @@
 import pytest
 from src.masks import get_mask_card_number
 
+
 # Параметризованные тесты
 @pytest.mark.parametrize("card_number, expected_result", [
     ("1234567890123456", "1234 56** **** 3456"),  # Тестируем корректный номер карты
     ("12345678", "1234 56** **** 5678"),  # Тестируем карту нестандартной длины
 ])
-def test_get_mask_card_number(card_number, expected_result):
+def test_get_mask_card_number(card_number: str, expected_result: str) -> None:
     assert get_mask_card_number(card_number) == expected_result
+
 
 # Параметризованный тест для пустой строки и пробела
 @pytest.mark.parametrize("card_number, expected_result", [
     ("", None),  # Пустая строка должна вызвать ошибку
     (" ", "  ** ****  ")  # Пробел должен оставаться как есть
 ])
-def test_get_mask_card_number_empty(card_number, expected_result):
+def test_get_mask_card_number_empty(card_number: str, expected_result: str) -> None:
     if card_number == "":
         with pytest.raises(ValueError):  # Ожидаем исключение ValueError для пустой строки
             get_mask_card_number(card_number)

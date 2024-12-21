@@ -1,5 +1,6 @@
 from typing import List, Dict, Any
 
+
 def sort_by_date(data: List[Dict[str, Any]], descending: bool = True) -> List[Dict[str, Any]]:
     """
     Сортирует список словарей по дате.
