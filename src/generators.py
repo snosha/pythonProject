@@ -1,15 +1,20 @@
-def filter_by_currency(transactions, currency_code):
+from typing import Dict, Generator, List
+
+
+def filter_by_currency(transactions: List[Dict], currency_code: str) -> Generator[Dict, None, None]:
     """Генератор, который поочередно выдает транзакции с заданной валютой."""
     for transaction in transactions:
         if transaction["operationAmount"]["currency"]["code"] == currency_code:
             yield transaction
 
-def transaction_descriptions(transactions):
+
+def transaction_descriptions(transactions: List[Dict]) -> Generator[str, None, None]:
     """Генератор, который возвращает описание транзакции по очереди."""
     for transaction in transactions:
         yield transaction["description"]
 
-def card_number_generator(start: int, end: int):
+
+def card_number_generator(start: int, end: int) -> Generator[str, None, None]:
     """Генератор, который выдает номера карт в формате XXXX XXXX XXXX XXXX."""
     for num in range(start, end + 1):
         yield f"{num:016d}"[:4] + " " + f"{num:016d}"[4:8] + " " + f"{num:016d}"[8:12] + " " + f"{num:016d}"[12:]
@@ -58,8 +63,11 @@ transactions = [
 # 1. Использование filter_by_currency для валюты "USD"
 usd_transactions = filter_by_currency(transactions, "USD")
 print("USD Transactions:")
-for _ in range(2):
-    print(next(usd_transactions))
+try:
+    print(next(usd_transactions))  # Первая транзакция USD
+    print(next(usd_transactions))  # Вторая транзакция USD
+except StopIteration:
+    print("No more USD transactions.")
 
 # 2. Использование transaction_descriptions
 descriptions = transaction_descriptions(transactions)
