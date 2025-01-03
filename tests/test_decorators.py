@@ -1,10 +1,16 @@
-from decorators.decorators import log
-import pytest
 import os
+import pytest
+from decorators.decorators import log
 
 
 # Тестирую логирование при успешном выполнении функции
 def test_log_to_console(capsys: pytest.CaptureFixture) -> None:
+    """
+    Тестирует логирование при успешном выполнении функции в консоль.
+
+    В этом тесте проверяется, что при вызове функции с аргументами (1, 2) лог
+    корректно выводится в консоль с правильными значениями и сообщением об успешном выполнении.
+    """
     @log()
     def sample_function(a: int, b: int) -> int:
         return a + b
@@ -20,6 +26,12 @@ def test_log_to_console(capsys: pytest.CaptureFixture) -> None:
 
 # Тестирую логирование в файл при успешном выполнении функции
 def test_log_to_file(tmp_path: pytest.TempPathFactory) -> None:
+    """
+    Тестирует логирование при успешном выполнении функции в файл.
+
+    В этом тесте проверяется, что при вызове функции с аргументами (1, 2) лог
+    корректно записывается в файл с правильными значениями и сообщением об успешном выполнении.
+    """
     log_file = os.path.join(str(tmp_path), "test_log.txt")  # Используем os.path.join для корректного создания пути
 
     @log(filename=log_file)
@@ -38,6 +50,12 @@ def test_log_to_file(tmp_path: pytest.TempPathFactory) -> None:
 
 # Тестирую логирование ошибок в консоль
 def test_log_with_error_in_console(capsys: pytest.CaptureFixture) -> None:
+    """
+    Тестирует логирование ошибок при выполнении функции в консоль.
+
+    В этом тесте проверяется, что при возникновении ошибки (например, деление на ноль)
+    лог корректно выводит ошибку в консоль с сообщением об ошибке и входными данными.
+    """
     @log()
     def sample_function(a: int, b: int) -> float:
         return a / b  # Деление на ноль вызовет ошибку
@@ -55,6 +73,12 @@ def test_log_with_error_in_console(capsys: pytest.CaptureFixture) -> None:
 
 # Тестирую логирование ошибок в файл
 def test_log_with_error_in_file(tmp_path: pytest.TempPathFactory) -> None:
+    """
+    Тестирует логирование ошибок при выполнении функции в файл.
+
+    В этом тесте проверяется, что при возникновении ошибки (например, деление на ноль)
+    лог корректно записывается в файл с сообщением об ошибке и входными данными.
+    """
     log_file = os.path.join(str(tmp_path), "test_log.txt")  # Используем os.path.join для корректного создания пути
 
     @log(filename=log_file)
