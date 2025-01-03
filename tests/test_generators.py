@@ -1,26 +1,39 @@
 from typing import Dict, Generator, List
-
 import pytest
 
 
 # Генераторы
-def filter_by_currency(transactions: List[Dict], currency_code: str) -> Generator[Dict, None, None]:
+def filter_by_currency(
+    transactions: List[Dict], currency_code: str
+) -> Generator[Dict, None, None]:
     """Генератор, который поочередно выдает транзакции с заданной валютой."""
     for transaction in transactions:
         if transaction["operationAmount"]["currency"]["code"] == currency_code:
             yield transaction
 
 
-def transaction_descriptions(transactions: List[Dict]) -> Generator[str, None, None]:
+def transaction_descriptions(
+    transactions: List[Dict]
+) -> Generator[str, None, None]:
     """Генератор, который возвращает описание транзакции по очереди."""
     for transaction in transactions:
         yield transaction["description"]
 
 
-def card_number_generator(start: int, end: int) -> Generator[str, None, None]:
+def card_number_generator(
+    start: int, end: int
+) -> Generator[str, None, None]:
     """Генератор, который выдает номера карт в формате XXXX XXXX XXXX XXXX."""
     for num in range(start, end + 1):
-        yield f"{num:016d}"[:4] + " " + f"{num:016d}"[4:8] + " " + f"{num:016d}"[8:12] + " " + f"{num:016d}"[12:]
+        yield (
+            f"{num:016d}"[:4]
+            + " "
+            + f"{num:016d}"[4:8]
+            + " "
+            + f"{num:016d}"[8:12]
+            + " "
+            + f"{num:016d}"[12:]
+        )
 
 
 # Пример данных для транзакций
@@ -139,8 +152,11 @@ def test_card_number_generator_single_number() -> None:
 
 
 # Параметризация для разных валют
-@pytest.mark.parametrize("currency_code, expected_length", [("USD", 1), ("EUR", 1), ("GBP", 0)])
-def test_filter_by_currency_parametrized(transactions_data: List[Dict],
-    currency_code: str, expected_length: int) -> None:
+@pytest.mark.parametrize(
+    "currency_code, expected_length", [("USD", 1), ("EUR", 1), ("GBP", 0)]
+)
+def test_filter_by_currency_parametrized(
+    transactions_data: List[Dict], currency_code: str, expected_length: int
+) -> None:
     filtered_transactions = list(filter_by_currency(transactions_data, currency_code))
     assert len(filtered_transactions) == expected_length

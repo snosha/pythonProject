@@ -1,10 +1,11 @@
 import functools
+from typing import Callable, Optional, Any
 
 
-def log(filename=None):
-    def decorator(func):
+def log(filename: Optional[str] = None) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             log_output = f"Вызов функции {func.__name__} с аргументами {args} и {kwargs}"
 
             # Логирую в файл или консоль

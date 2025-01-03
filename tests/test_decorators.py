@@ -1,11 +1,12 @@
-import pytest
 from decorators.decorators import log
+import pytest
+import os
 
 
 # Тестирую логирование при успешном выполнении функции
-def test_log_to_console(capsys):
+def test_log_to_console(capsys: pytest.CaptureFixture) -> None:
     @log()
-    def sample_function(a, b):
+    def sample_function(a: int, b: int) -> int:
         return a + b
 
     sample_function(1, 2)
@@ -18,11 +19,11 @@ def test_log_to_console(capsys):
 
 
 # Тестирую логирование в файл при успешном выполнении функции
-def test_log_to_file(tmp_path):
-    log_file = tmp_path / "test_log.txt"
+def test_log_to_file(tmp_path: pytest.TempPathFactory) -> None:
+    log_file = os.path.join(str(tmp_path), "test_log.txt")  # Используем os.path.join для корректного создания пути
 
     @log(filename=log_file)
-    def sample_function(a, b):
+    def sample_function(a: int, b: int) -> int:
         return a + b
 
     sample_function(1, 2)
@@ -36,9 +37,9 @@ def test_log_to_file(tmp_path):
 
 
 # Тестирую логирование ошибок в консоль
-def test_log_with_error_in_console(capsys):
+def test_log_with_error_in_console(capsys: pytest.CaptureFixture) -> None:
     @log()
-    def sample_function(a, b):
+    def sample_function(a: int, b: int) -> float:
         return a / b  # Деление на ноль вызовет ошибку
 
     try:
@@ -53,11 +54,11 @@ def test_log_with_error_in_console(capsys):
 
 
 # Тестирую логирование ошибок в файл
-def test_log_with_error_in_file(tmp_path):
-    log_file = tmp_path / "test_log.txt"
+def test_log_with_error_in_file(tmp_path: pytest.TempPathFactory) -> None:
+    log_file = os.path.join(str(tmp_path), "test_log.txt")  # Используем os.path.join для корректного создания пути
 
     @log(filename=log_file)
-    def sample_function(a, b):
+    def sample_function(a: int, b: int) -> float:
         return a / b  # Деление на ноль вызовет ошибку
 
     try:
