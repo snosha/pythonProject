@@ -140,6 +140,7 @@ def test_card_number_generator_single_number() -> None:
 
 # Параметризация для разных валют
 @pytest.mark.parametrize("currency_code, expected_length", [("USD", 1), ("EUR", 1), ("GBP", 0)])
-def test_filter_by_currency_parametrized(transactions_data: List[Dict], currency_code: str, expected_length: int) -> None:
+def test_filter_by_currency_parametrized(transactions_data: List[Dict],
+    currency_code: str, expected_length: int) -> None:
     filtered_transactions = list(filter_by_currency(transactions_data, currency_code))
     assert len(filtered_transactions) == expected_length
