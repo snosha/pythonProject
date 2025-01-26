@@ -2,35 +2,39 @@ import os
 import requests
 from dotenv import load_dotenv
 
-# Загружаем переменные окружения из файла .env
+# Загружаем переменные окружения из .env
 load_dotenv()
 
 API_URL = "https://api.apilayer.com/exchangerates_data/convert"
 API_KEY = os.getenv("EXCHANGE_API_KEY")
 
 
-def convert_to_rub(amount, currency):
-    """
-    Конвертирует сумму в рубли.
+def convert_to_rub(amount: float, currency: str) -> float:
+    """Конвертирует сумму в валюте (USD, EUR) в рубли (RUB)"""
 
-    Args:
-        amount (float): Сумма для конвертации.
-        currency (str): Исходная валюта (например, USD или EUR).
+    if currency not in ["USD", "EUR"]:
+        raise ValueError(f"Currency {currency} not supported. Only USD and EUR are supported.")
 
-    Returns:
-        float: Сумма в рублях.
-    """
-    if currency == "RUB":
-        return float(amount)
+    # Формируем параметры для запроса
+    params = {
+        "amount": amount,
+        "from": currency,
+        "to": "RUB"
+    }
+    headers = {
+        "apikey": API_KEY
+    }
 
-    headers = {"apikey": API_KEY}
-    params = {"from": currency, "to": "RUB", "amount": amount}
+    # Делаем запрос к внешнему API
+    response = requests.get(API_URL, params=params, headers=headers)
 
-    try:
-        response = requests.get(API_URL, headers=headers, params=params)
-        response.raise_for_status()
-        data = response.json()
-        return float(data.get("result", 0))
-    except (requests.RequestException, ValueError) as e:
-        print(f"Ошибка при конвертации валюты: {e}")
-        return 0.0
+    if response.status_code != 200:
+        raise Exception("Failed to fetch exchange rates from API")
+
+    data = response.json()
+
+    if not data.get("success"):
+        raise Exception("API returned an error")
+
+    # Получаем результат конвертации
+    return data["result"]
