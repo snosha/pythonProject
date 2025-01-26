@@ -1,9 +1,18 @@
 import json
-import os
 from pathlib import Path
 
 
 def load_transactions(file_path='data/operations.json'):
+    """
+    Функция загружает данные о транзакциях из JSON-файла.
+
+    Параметры:
+    file_path (str): Путь к файлу с данными. По умолчанию 'data/operations.json'.
+
+    Возвращает:
+    list: Список транзакций из файла, если файл существует и содержит корректные данные.
+          Пустой список в случае ошибки (например, если файл не существует или данные некорректны).
+    """
     # Преобразуем относительный путь в абсолютный
     absolute_path = Path(file_path).resolve()
 
