@@ -1,6 +1,5 @@
 import os
 import requests
-import json
 from dotenv import load_dotenv
 
 # Загружаем переменные окружения из .env
@@ -12,21 +11,17 @@ API_KEY = os.getenv("EXCHANGE_API_KEY")
 
 def convert_to_rub(amount: float, currency: str) -> float:
     """
-    Конвертирует сумму в валюте (USD, EUR) в рубли (RUB).
+    Конвертирует сумму из указанной валюты (USD, EUR) в рубли (RUB).
 
     Параметры:
     amount (float): Сумма для конвертации.
-    currency (str): Валюта, из которой нужно конвертировать. Допустимые значения: 'USD', 'EUR'.
+    currency (str): Код валюты (например, 'USD' или 'EUR').
 
     Возвращает:
-    float: Сумма в рублях (RUB).
-
-    Исключения:
-    ValueError: Если указана неподдерживаемая валюта (не 'USD' или 'EUR').
-    Exception: Если произошла ошибка при запросе к API или возвращен некорректный ответ.
+    float: Конвертированная сумма в рублях (RUB).
     """
     if currency not in ["USD", "EUR"]:
-        raise ValueError(f"Currency {currency} not supported. Only USD and EUR are supported.")
+        raise ValueError(f"Валюта {currency} не поддерживается. Только USD и EUR допустимы.")
 
     # Формируем параметры для запроса
     params = {
@@ -38,35 +33,42 @@ def convert_to_rub(amount: float, currency: str) -> float:
         "apikey": API_KEY
     }
 
-    # Делаем запрос к внешнему API
+    # Выполняем запрос к API
     response = requests.get(API_URL, params=params, headers=headers)
 
     if response.status_code != 200:
-        raise Exception("Failed to fetch exchange rates from API")
+        raise Exception(f"Ошибка API: статус {response.status_code}")
 
     data = response.json()
 
     if not data.get("success"):
-        raise Exception("API returned an error")
+        raise Exception("API вернуло ошибку")
 
-    # Получаем результат конвертации
+    # Возвращаем результат конвертации
     return data["result"]
 
 
-def convert_transaction_from_json(file_name: str) -> float:
-    file_path = os.path.join("data", file_name)  # Путь к файлу operations.json
+def process_transaction(some_transaction: dict) -> float:
+    """
+    Обрабатывает транзакцию и возвращает её сумму в рублях (RUB).
+    Если валюта не RUB, выполняется конвертация с помощью convert_to_rub.
+
+    Параметры:
+    some_transaction (dict): Словарь с данными транзакции.
+
+    Возвращает:
+    float: Сумма транзакции в рублях (RUB).
+    """
     try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            transaction = json.load(file)
-    except FileNotFoundError:
-        raise FileNotFoundError(f"Файл {file_name} не найден в папке data.")
-    except json.JSONDecodeError:
-        raise ValueError("Ошибка при чтении или парсинге JSON файла.")
+        # Извлекаем сумму и код валюты
+        amount = float(some_transaction["operationAmount"]["amount"])
+        currency = some_transaction["operationAmount"]["currency"]["code"]
+    except (KeyError, TypeError, ValueError):
+        raise ValueError("Некорректная структура данных транзакции.")
 
-    # Извлекаем информацию из транзакции
-    amount = float(transaction["operationAmount"]["amount"])
-    currency = transaction["operationAmount"]["currency"]["code"]
+    # Если валюта не RUB, выполняем конвертацию
+    if currency != "RUB":
+        return convert_to_rub(amount, currency)
 
-    # Конвертируем в рубли
-    return convert_to_rub(amount, currency)
-
+    # Если валюта RUB, возвращаем сумму без изменений
+    return amount
