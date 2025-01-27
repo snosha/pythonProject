@@ -1,4 +1,5 @@
 import os
+
 import requests
 from dotenv import load_dotenv
 
@@ -10,8 +11,20 @@ API_KEY = os.getenv("EXCHANGE_API_KEY")
 
 
 def convert_to_rub(amount: float, currency: str) -> float:
-    """Конвертирует сумму в валюте (USD, EUR) в рубли (RUB)"""
+    """
+    Конвертирует сумму в валюте (USD, EUR) в рубли (RUB).
 
+    Параметры:
+    amount (float): Сумма для конвертации.
+    currency (str): Валюта, из которой нужно конвертировать. Допустимые значения: 'USD', 'EUR'.
+
+    Возвращает:
+    float: Сумма в рублях (RUB).
+
+    Исключения:
+    ValueError: Если указана неподдерживаемая валюта (не 'USD' или 'EUR').
+    Exception: Если произошла ошибка при запросе к API или возвращен некорректный ответ.
+    """
     if currency not in ["USD", "EUR"]:
         raise ValueError(f"Currency {currency} not supported. Only USD and EUR are supported.")
 
