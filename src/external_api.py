@@ -1,6 +1,6 @@
 import os
-
 import requests
+import json
 from dotenv import load_dotenv
 
 # Загружаем переменные окружения из .env
@@ -51,3 +51,22 @@ def convert_to_rub(amount: float, currency: str) -> float:
 
     # Получаем результат конвертации
     return data["result"]
+
+
+def convert_transaction_from_json(file_name: str) -> float:
+    file_path = os.path.join("data", file_name)  # Путь к файлу operations.json
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            transaction = json.load(file)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Файл {file_name} не найден в папке data.")
+    except json.JSONDecodeError:
+        raise ValueError("Ошибка при чтении или парсинге JSON файла.")
+
+    # Извлекаем информацию из транзакции
+    amount = float(transaction["operationAmount"]["amount"])
+    currency = transaction["operationAmount"]["currency"]["code"]
+
+    # Конвертируем в рубли
+    return convert_to_rub(amount, currency)
+
