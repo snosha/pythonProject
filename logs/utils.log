@@ -1,0 +1,3 @@
+2025-01-31 20:29:10,778 - utils - WARNING - Неверный формат данных в файле: C:\Users\Антон\PycharmProjects\pythonProject\data\operations.json. Ожидался список.
+2025-01-31 20:29:10,781 - utils - ERROR - Неизвестная ошибка при загрузке данных из файла: C:\Users\Антон\PycharmProjects\pythonProject\data\operations.json. Ошибка: 
+2025-01-31 20:29:10,784 - utils - ERROR - Ошибка при декодировании JSON в файле: C:\Users\Антон\PycharmProjects\pythonProject\data\operations.json
